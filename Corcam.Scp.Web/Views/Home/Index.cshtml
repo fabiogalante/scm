@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Corcam.Scp.Dominio.Comandos.Resultados.PacientesResultado>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+@section styles
+{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+}
+
+<div id="cabecalho-dados" class="row">
+    <div class="col-md-7 col-xs-8">
+        <h2>Pacientes</h2>
+    </div>
+    <div class="col-md-5 col-sm-3 text-right">
+        <br />
+
+        <button class="btn btn-default paciente-btn">
+            <i class="glyphicon glyphicon-user"></i>
+        </button>
+
+
+    </div>
+</div>
+<br />
+<div id="partial">
+    <table class="table table-condensed table-striped table-hover" id="pacientesTable">
+        <thead class="thin-border-bottom">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cpf)
+                </th>
+                <th class="no-sort">
+                    @Html.DisplayNameFor(model => model.NomeCompleto)
+                </th>
+                <th class="no-sort">
+                    @Html.DisplayNameFor(model => model.Sexo)
+                </th>
+                <th class="no-sort">
+                    @Html.DisplayNameFor(model => model.DataNascimento)
+                </th>
+                <th class="no-sort">
+                    @Html.DisplayNameFor(model => model.Peso)
+                </th>
+                <th class="no-sort">
+                    @Html.DisplayNameFor(model => model.Altura)
+                </th>
+                <th class="no-sort">&nbsp;</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr id="@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cpf)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomeCompleto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sexo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataNascimento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Peso)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Altura)
+                    </td>
+
+                    <td class="mnutable">
+                        <div class="btn-group">
+
+                            <button class="btn btn-default edit-btn" data-nome="@item.NomeCompleto" data-id="@item.Id" title="Editar @item.NomeCompleto">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </button>
+
+
+                            <button class="btn btn-default delete-btn" data-nome="@item.NomeCompleto" data-id="@item.Id" title="Excluir @item.NomeCompleto">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+
+
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+
+@Html.Partial("_Incluir")
+@Html.Partial("_Delete")
+
+<div id="editarPacienteDiv"></div>
+
+
+@section Scripts
+{
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script src="~/js/jquery.mask.js"></script>
+}

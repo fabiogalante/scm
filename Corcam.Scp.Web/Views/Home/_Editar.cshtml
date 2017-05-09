@@ -1,0 +1,88 @@
+﻿
+
+@model Corcam.Scp.Web.Model.PacienteDto
+
+
+<!-- Modal -->
+<div class="modal fade bs-modal-lg" id="editarModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Alterar Paciente</h4>
+            </div>
+            <div class="modal-body">
+                
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Cpf)
+                
+                <div class="container">
+                  
+                    <form role="form" class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-1" for="cpf">CPF</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(model => model.Cpf, new {@class = "form-control", @readonly = "true"})
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-1" for="cpf">Nome Completo</label>
+                            <div class="col-sm-5">
+                                @Html.EditorFor(model => model.NomeCompleto, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label>Sexo</label>
+                             
+                                @{
+                                    var selectList = new SelectList(
+                                        new List<SelectListItem>
+                                        {
+                                            new SelectListItem {Text = "Masculino", Value = "1"},
+                                            new SelectListItem {Text = "Feminino", Value = "2"},
+                                        }, "Value", "Text");
+                                }
+
+                                @Html.DropDownListFor(m => m.Sexo, selectList, new {@class = "form-control"})
+                                
+
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Data Nascimento:</label>
+                                @Html.EditorFor(model => model.DataNascimento, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label>Peso:</label>
+                                @Html.EditorFor(model => model.Peso, new {htmlAttributes = new {@class = "form-control"}})
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Altura</label>
+                                @Html.EditorFor(model => model.Altura, new {htmlAttributes = new {@class = "form-control"}})
+                            </div>
+                        </div>
+                        
+                        <button id="editarPaciente" type="submit" class="btn btn-success">Salvar</button>
+                      
+                    </form>
+                    <hr>
+                </div>
+              
+            </div>
+            <div id="msgErro" class="alert alert-danger hide text-center">
+                <small><span></span></small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

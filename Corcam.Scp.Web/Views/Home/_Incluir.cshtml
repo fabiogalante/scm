@@ -1,0 +1,75 @@
+﻿<!-- Modal -->
+<div class="modal fade bs-modal-lg" id="incluirModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Cadastrar Paciente</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" />
+                
+                <div class="container">
+                  
+                    <form role="form" class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-1" for="cpf">CPF</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" name="cpf" id="cpf">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-1" for="cpf">Nome Completo</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto">
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label>Sexo</label>
+                                <select class="form-control" id="sexo" name="sexo">
+                                    <option value="1">Masculino</option>
+                                    <option value="2">Feminino</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Data Nascimento:</label>
+                                <input type="text" class="form-control" id="dataNascimento" name="dataNascimento">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label>Peso:</label>
+                                <input type="text" class="form-control" id="peso" name="peso">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Altura</label>
+                                <input type="text" class="form-control" id="altura" name="altura">
+                            </div>
+                        </div>
+                        
+                        <button id="salvarPaciente" type="submit" class="btn btn-success">Salvar</button>
+                      
+                    </form>
+                    <hr>
+                </div>
+
+
+             
+
+
+
+
+            </div>
+            <div id="msgErro" class="alert alert-danger hide text-center"><small><span></span></small></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
