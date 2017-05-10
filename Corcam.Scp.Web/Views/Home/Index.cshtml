@@ -119,4 +119,18 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <script src="~/js/jquery.mask.js"></script>
+    
+    <script>
+
+       
+        $(document).on("ajaxComplete", function(){
+            $('#DataNascimento').mask('00/00/0000');
+            $('#Cpf').mask('000.000.000-00', { reverse: true });
+            $('#Peso').mask('0,00', { reverse: true });
+            $('#Altura').mask('0,00', { reverse: true });
+        });
+
+
+       
+    </script>
 }

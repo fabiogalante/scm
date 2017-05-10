@@ -1,20 +1,16 @@
-﻿// Write your Javascript code.
-
-var app = {};
-
+﻿var app = {};
 
 $(function () {
     app.dataTable();
     app.Inicia();
     app.IncluirPaciente();
-    app.mask();
     app.Editar();
-
+    app.mask();
 });
-
 
 app.SalvarEditar = function () {
 
+    app.mask();
 
     $('#editarPaciente').click(function (e) {
 
@@ -69,50 +65,29 @@ app.Editar = function() {
             div.html('');
             div.append(data);
             app.SalvarEditar();
-            app.mask();
             $('#editarModal').modal('show');
+            app.mask();
 
         });
 
-       
-
-
     });
-
-
-    
-
-    
-
-  
 }
-
 
 app.mask = function () {
 
-    $('#dataNascimento').mask('00/00/0000');
-    $('#cpf').mask('000.000.000-00', { reverse: true });
-    $('#peso').mask('0,00', { reverse: true });
-    $('#altura').mask('0,00', { reverse: true });
-   
-
+    $('#DataNascimento').mask('00/00/0000');
+    $('#Cpf').mask('000.000.000-00', { reverse: true });
+    $('#Peso').mask('0,00', { reverse: true });
+    $('#Altura').mask('0,00', { reverse: true });
 }
 
 app.Inicia = function () {
 
     console.log('scp');
 
-
     $(".paciente-btn").click(function (e) {
         e.preventDefault();
         $('#incluirModal').modal('show');
-    });
-
-  
-
-    $(".edit-btn").click(function (e) {
-        e.preventDefault();
-        $('#editarModal').modal('show');
     });
 
 
@@ -124,10 +99,6 @@ app.Inicia = function () {
         $("#deleteModal .modal-body input[type=hidden]").val(id);
         $("#deleteModal .modal-body span").text(nome);
     });
-
-
-   
-
 
     $("#deleteModal .modal-footer button").click(function (e) {
 
@@ -208,10 +179,10 @@ app.IncluirPaciente = function () {
     $("#salvarPaciente").click(function (e) {
 
         e.preventDefault();
-        if ($('#cpf').val() === '')
+        if ($('#Cpf').val() === '')
             return toastr.success('Digite o cpf', "Corcam");
 
-        if ($('#nomeCompleto').val() === '')
+        if ($('#NomeCompleto').val() === '')
             return toastr.success('Digite o nome', "Corcam");
 
 
@@ -221,10 +192,11 @@ app.IncluirPaciente = function () {
             dataType: "json",
             type: "post",
             success: function (data) {
-                return  toastr.success(data.mensagem, "Corcam");
+                return toastr.success(data.mensagem, "Corcam");
+
             },
             complete: function () {
-                windows.localtion.reload();
+                window.windows.localtion.reload();
             },
             error: function (data) {
                 $('#incluirModal').modal('hide');

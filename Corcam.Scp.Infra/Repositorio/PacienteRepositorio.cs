@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using Corcam.Scp.Compartilhado;
@@ -85,11 +86,34 @@ namespace Corcam.Scp.Infra.Repositorio
         public void Atualizar(Paciente paciente)
         {
 
-            //Indica os campos que não sofreram alteração
-            _context.Pacientes.Attach(paciente);
-            _context.Entry(paciente).State = EntityState.Modified;
-            _context.Entry(paciente).Property(c => c.Documento.Numero).IsModified = false;
-            _context.SaveChanges();
+
+            using (var connection = new SqlConnection(Runtime.ConnectionString))
+            {
+                string updateQuery =
+                    @"UPDATE [dbo].[Paciente] SET Nome = @PrimeiroNome, Sobrenome = @SobreNome, Sexo = @Sexo, DataNascimento = @DataNascimento, Peso = @Peso, Altura = @Altura WHERE Cpf = @Numero";
+
+                connection.Execute(updateQuery, new
+                {
+                    paciente.Nome.PrimeiroNome,
+                    paciente.Nome.SobreNome,
+                    paciente.Dados.Sexo,
+                    paciente.Dados.DataNascimento,
+                    paciente.Dados.Peso,
+                    paciente.Dados.Altura,
+                    paciente.Documento.Numero
+                });
+            }
+
+            ////Indica os campos que não sofreram alteração
+            //_context.Pacientes.Attach(paciente);
+            //_context.Entry(paciente).State = EntityState.Modified;
+            //_context.Entry(paciente).Property(c => c.Documento.Numero).IsModified = false;
+
+            
+
+
+
+           
 
 
         }

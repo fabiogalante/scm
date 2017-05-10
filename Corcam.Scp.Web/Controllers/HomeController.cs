@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using Corcam.Scp.Dominio.Entidades;
 using Corcam.Scp.Dominio.Enum;
 using Corcam.Scp.Dominio.ObjetosValor;
@@ -16,7 +18,6 @@ namespace Corcam.Scp.Web.Controllers
         {
             _repositorio = repositorio;
         }
-            
         
         public PartialViewResult ObterPacientePorId(Guid id)
         {
@@ -30,7 +31,6 @@ namespace Corcam.Scp.Web.Controllers
                 DataNascimento = paciente.Dados.DataNascimento,
                 Altura = paciente.Dados.Altura,
                 NomeCompleto = $"{paciente.Nome.PrimeiroNome}  {paciente.Nome.SobreNome}"
-                //NomeCompleto = string.Format("{0}  {1}", paciente.Nome.PrimeiroNome, paciente.Nome.SobreNome)
         };
 
             return PartialView("_Editar", dto);
@@ -49,50 +49,69 @@ namespace Corcam.Scp.Web.Controllers
             object obj = null;
             var erro = string.Empty;
 
-            var nomeCompleto = dto.NomeCompleto.Split(' ');
-            if (nomeCompleto.Length > 0)
+            if (dto.NomeCompleto != null)
             {
-                var nome = nomeCompleto[0];
-                if (nomeCompleto.Length > 1)
+                var nomeCompleto = dto.NomeCompleto.Split(' ');
+                if (nomeCompleto.Length > 0)
                 {
-                    var sobreNome = nomeCompleto[1];
-
-                    var paciente = new Paciente(
-                        new Documento(dto.Cpf.Replace(".","").Replace("-","")),
-                        new Nome(nome, sobreNome),
-                        new Dados((Sexo)dto.Sexo, dto.DataNascimento, dto.Peso, dto.Altura));
-
-
-                    try
+                    var nome = nomeCompleto[0];
+                    if (nomeCompleto.Length > 2)
                     {
-                        if (paciente.IsValid())
+                        var sobreNome = nomeCompleto[2];
+
+                        var paciente = new Paciente(
+                            new Documento(dto.Cpf.Replace(".", "").Replace("-", "")),
+                            new Nome(nome.ToUpper(), sobreNome.ToUpper()),
+                            new Dados((Sexo) dto.Sexo, dto.DataNascimento, dto.Peso, dto.Altura));
+
+
+                        try
                         {
-                            _repositorio.SalvarPaciente(paciente);
-                            _repositorio.Salvar();
+                            if (paciente.IsValid())
+                            {
+                                _repositorio.SalvarPaciente(paciente);
+                                _repositorio.Salvar();
+                            }
+                            else
+                            {
+                                foreach (var mensagem in paciente.Notifications)
+                                    erro += $"{mensagem.Message}";
+
+                                obj = new {Mensagem = erro};
+                                return Json(obj);
+                            }
+
+
+                            obj = new {Mensagem = "Paciente cadastrado com sucesso!"};
                         }
-                        else
+
+                        catch (DbUpdateException ex)
                         {
-                            foreach (var mensagem in paciente.Notifications)
-                                erro += $"{mensagem.Message}";
-
-                            obj = new { Mensagem = erro };
-                            return Json(obj);
-
+                            if (ex.InnerException != null)
+                            {
+                                var innerException = ex.InnerException.InnerException as SqlException;
+                                if (innerException != null &&
+                                    (innerException.Number == 2627 || innerException.Number == 2601))
+                                {
+                                    obj = new {Mensagem = "Cpf já cadastrado!"};
+                                }
+                                else
+                                {
+                                    throw;
+                                }
+                            }
                         }
-
-
-                        obj = new { Mensagem = "Paciente cadastrado com sucesso!" };
+                        catch (Exception ex)
+                        {
+                            obj =  new { Mensagem = ex.Message};
+                        }
                     }
-
-
-                    catch (Exception ex)
-                    {
-                        obj = ex.Message.Contains("UniqueConstraint")
-                            ? new {Mensagem = "CPF já cadastrado"}
-                            : new {Mensagem = ex.Message};
-                    }
+               
                 }
+               
             }
+            else
+                obj = new { Mensagem = "Digite o nome!" };
 
 
             return Json(obj);
@@ -124,9 +143,9 @@ namespace Corcam.Scp.Web.Controllers
             {
                 var primeiroNome = nomeCompleto[0];
 
-                if (nomeCompleto.Length > 1)
+                if (nomeCompleto.Length > 2)
                 {
-                    var sobreNome = nomeCompleto[1];
+                    var sobreNome = nomeCompleto[2];
 
                     var paciente = new Paciente(
                         new Documento(cpf),
@@ -136,23 +155,12 @@ namespace Corcam.Scp.Web.Controllers
                             Convert.ToDecimal(peso),
                             Convert.ToDecimal(altura)));
 
+                   
+
                     try
                     {
                         if (paciente.IsValid())
-                        {
                             _repositorio.Atualizar(paciente);
-                           // _repositorio.Salvar();
-                        }
-                        else
-                        {
-                            foreach (var mensagem in paciente.Notifications)
-                                erro += $"{mensagem.Message}";
-
-                            obj = new {Mensagem = erro};
-                            return Json(obj);
-
-                        }
-
 
                         obj = new {Mensagem = "Paciente alterado com sucesso!"};
                     }
@@ -167,10 +175,6 @@ namespace Corcam.Scp.Web.Controllers
 
             return Json(obj);
         }
-      
-
-    
-
 
         public IActionResult Error()
         {
